@@ -18,16 +18,19 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image using the Dockerfile
-                    docker.build(DOCKER_IMAGE)
+                    bat 'docker build -t %DOCKER_IMAGE% .'
                 }
             }
         }
 
         stage('Login to Docker Hub') {
             steps {
-                // Login to Docker Hub
-                withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDENTIALS, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                    sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+                // Login to Docker Hub using Jenkins credentials
+                withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDENTIALS, 
+                                                   usernameVariable: 'DOCKER_USERNAME', 
+                                                   passwordVariable: 'DOCKER_PASSWORD')]) {
+                    // Docker login command using the credentials
+                    bat 'docker login -u %DOCKER_USERNAME% -p %DOCKER_PASSWORD%'
                 }
             }
         }
@@ -36,7 +39,7 @@ pipeline {
             steps {
                 // Push the built image to Docker Hub
                 script {
-                    docker.push(DOCKER_IMAGE)
+                    bat 'docker push %DOCKER_IMAGE%'
                 }
             }
         }
@@ -44,7 +47,7 @@ pipeline {
         stage('Clean Up') {
             steps {
                 // Clean up Docker images to avoid excess storage usage
-                sh 'docker rmi $DOCKER_IMAGE'
+                bat 'docker rmi %DOCKER_IMAGE%'
             }
         }
     }
