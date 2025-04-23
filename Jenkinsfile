@@ -2,53 +2,57 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_CREDENTIALS = 'docker-hub-credentials-id' // Jenkins credential ID (Username/Password)
-        DOCKER_IMAGE = 'akash0537/portfolio-ci-cd'
+        DOCKER_IMAGE = "akash05378/portfolio-app"  // Name of the Docker image
+        DOCKER_HUB_CREDENTIALS = "docker-hub-creds"  // Jenkins Credentials ID for Docker Hub login
     }
 
     stages {
         stage('Clone Repository') {
             steps {
-                checkout scm
+                // Clone your GitHub repository
+                git 'https://github.com/nightsight30-sky/portfolio-ci-cd'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh "docker build -t ${DOCKER_IMAGE} ."
+                    // Build the Docker image using the Dockerfile
+                    docker.build(DOCKER_IMAGE)
                 }
             }
         }
 
-        stage('Push to Docker Hub') {
+        stage('Login to Docker Hub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    script {
-                        sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
-                        sh "docker push ${DOCKER_IMAGE}"
-                    }
+                // Login to Docker Hub
+                withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDENTIALS, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                    sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
                 }
             }
         }
 
-        stage('Deploy Container') {
+        stage('Push Docker Image') {
             steps {
+                // Push the built image to Docker Hub
                 script {
-                    sh 'docker stop portfolio-container || true'
-                    sh 'docker rm portfolio-container || true'
-                    sh "docker run -d -p 80:80 --name portfolio-container ${DOCKER_IMAGE}"
+                    docker.push(DOCKER_IMAGE)
                 }
+            }
+        }
+
+        stage('Clean Up') {
+            steps {
+                // Clean up Docker images to avoid excess storage usage
+                sh 'docker rmi $DOCKER_IMAGE'
             }
         }
     }
 
     post {
-        success {
-            echo '✅ Deployment successful!'
-        }
-        failure {
-            echo '❌ Something went wrong. Check Jenkins logs.'
+        always {
+            // Clean workspace after the build is complete
+            cleanWs()
         }
     }
 }
