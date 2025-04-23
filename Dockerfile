@@ -1,14 +1,12 @@
-# Use a minimal Nginx image
+# Use an official Nginx image as the base image
 FROM nginx:alpine
 
-# Clean default nginx content
-RUN rm -rf /usr/share/nginx/html/*
+# Copy the static files into the Nginx container
+COPY index.html /usr/share/nginx/html
+COPY styles.css /usr/share/nginx/html
 
-# Copy your portfolio files to the web root
-COPY . /usr/share/nginx/html
-
-# Expose port 80 for serving
+# Expose the default Nginx port
 EXPOSE 80
 
-# Start Nginx
+# The default Nginx container will automatically serve the files on port 80
 CMD ["nginx", "-g", "daemon off;"]
