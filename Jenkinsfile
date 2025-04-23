@@ -9,8 +9,10 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                // Clone your GitHub repository
-                git 'https://github.com/nightsight30-sky/portfolio-ci-cd'
+                script {
+                    // Clone the GitHub repository (replace 'main' with your branch if different)
+                    git branch: 'main', url: 'https://github.com/nightsight30-sky/portfolio-ci-cd'
+                }
             }
         }
 
@@ -37,8 +39,8 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                // Push the built image to Docker Hub
                 script {
+                    // Push the built image to Docker Hub
                     bat 'docker push %DOCKER_IMAGE%'
                 }
             }
