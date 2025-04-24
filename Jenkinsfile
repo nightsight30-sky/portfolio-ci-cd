@@ -58,13 +58,13 @@ pipeline {
         stage('Clean Up') {
             steps {
                 script {
-                    // Stop and remove the container before removing the image
                     bat "docker stop %CONTAINER_NAME% || exit 0"
                     bat "docker rm %CONTAINER_NAME% || exit 0"
                     bat "docker rmi -f %DOCKER_IMAGE%"
                 }
             }
         }
+
     }
 
     post {
