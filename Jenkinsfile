@@ -56,10 +56,13 @@ pipeline {
         stage('Clean Up') {
             steps {
                 script {
-                    bat "docker rmi %DOCKER_IMAGE%"
+                    bat "docker stop portfolio-app || exit 0"
+                    bat "docker rm portfolio-app || exit 0"
+                    bat "docker rmi -f %DOCKER_IMAGE%"
                 }
             }
         }
+
     }
 
     post {
