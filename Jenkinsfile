@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = "nightsight30/portfolio-app"
         DOCKER_HUB_CREDENTIALS = "docker-hub-creds-v2"
         CONTAINER_NAME = "portfolio-app"
-        HOST_PORT = "8081" // Change if 8081 is in use
+        HOST_PORT = "8081"
     }
 
     stages {
@@ -14,7 +14,6 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/nightsight30-sky/portfolio-ci-cd'
             }
         }
-
         stage('Build Docker Image') {
             steps {
                 script {
@@ -22,7 +21,6 @@ pipeline {
                 }
             }
         }
-
         stage('Login to Docker Hub') {
             steps {
                 script {
@@ -34,7 +32,6 @@ pipeline {
                 }
             }
         }
-
         stage('Push Docker Image') {
             steps {
                 script {
@@ -42,20 +39,16 @@ pipeline {
                 }
             }
         }
-
         stage('Run Docker Container') {
             steps {
                 script {
-                    // Stop and remove any existing container with the same name (ignore errors)
                     bat "docker stop %CONTAINER_NAME% || exit 0"
                     bat "docker rm %CONTAINER_NAME% || exit 0"
-                    // Run the new container with port mapping
                     bat "docker run -d -p %HOST_PORT%:80 --name %CONTAINER_NAME% %DOCKER_IMAGE%"
                 }
             }
         }
     }
-
     post {
         always {
             cleanWs()
