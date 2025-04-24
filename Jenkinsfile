@@ -45,14 +45,13 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    // Stop and remove any existing container with the same name (ignore errors)
                     bat "docker stop portfolio-app || exit 0"
                     bat "docker rm portfolio-app || exit 0"
-                    // Run the new container mapping host port 8080 to container port 80
-                    bat "docker run -d -p 8080:80 --name portfolio-app %DOCKER_IMAGE%"
+                    bat "docker run -d -p 8081:80 --name portfolio-app %DOCKER_IMAGE%"
                 }
             }
         }
+
 
         stage('Clean Up') {
             steps {
