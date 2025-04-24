@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = "nightsight30/portfolio-app"
         DOCKER_HUB_CREDENTIALS = "docker-hub-creds-v2"
         CONTAINER_NAME = "portfolio-app"
-        HOST_PORT = "8081" // You can change this if 8081 is in use
+        HOST_PORT = "8081" // Change if 8081 is in use
     }
 
     stages {
@@ -46,25 +46,14 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    // Stop and remove any existing container with the same name
+                    // Stop and remove any existing container with the same name (ignore errors)
                     bat "docker stop %CONTAINER_NAME% || exit 0"
                     bat "docker rm %CONTAINER_NAME% || exit 0"
                     // Run the new container with port mapping
-                    bat "docker run -d -p 8081:80 --name %CONTAINER_NAME% %DOCKER_IMAGE%"
+                    bat "docker run -d -p %HOST_PORT%:80 --name %CONTAINER_NAME% %DOCKER_IMAGE%"
                 }
             }
         }
-
-        stage('Clean Up') {
-            steps {
-                script {
-                    bat "docker stop %CONTAINER_NAME% || exit 0"
-                    bat "docker rm %CONTAINER_NAME% || exit 0"
-                    bat "docker rmi -f %DOCKER_IMAGE%"
-                }
-            }
-        }
-
     }
 
     post {
