@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "akash05378/portfolio-app"
+        DOCKER_IMAGE = "nightsight30/portfolio-app"
         DOCKER_HUB_CREDENTIALS = "docker-hub-creds-v2"
     }
 
