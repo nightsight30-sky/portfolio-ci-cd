@@ -50,7 +50,7 @@ pipeline {
                     bat "docker stop %CONTAINER_NAME% || exit 0"
                     bat "docker rm %CONTAINER_NAME% || exit 0"
                     // Run the new container with port mapping
-                    bat "docker run -d -p %HOST_PORT%:80 --name %CONTAINER_NAME% %DOCKER_IMAGE%"
+                    bat "docker run -d -p 8081:80 --name %CONTAINER_NAME% %DOCKER_IMAGE%"
                 }
             }
         }
