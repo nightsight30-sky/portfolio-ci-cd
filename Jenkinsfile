@@ -2,10 +2,9 @@ pipeline {
     agent any
 
     environment {
-    DOCKER_IMAGE = "akash05378/portfolio-app"
-    DOCKER_HUB_CREDENTIALS = "docker-hub-creds-v2"
-}
-
+        DOCKER_IMAGE = "akash05378/portfolio-app"
+        DOCKER_HUB_CREDENTIALS = "docker-hub-creds-v2"
+    }
 
     stages {
         stage('Clone Repository') {
@@ -17,7 +16,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    bat "docker build -t ${DOCKER_IMAGE} ."
+                    sh "docker build -t ${DOCKER_IMAGE} ."
                 }
             }
         }
@@ -28,7 +27,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}",
                                                       usernameVariable: 'DOCKER_USERNAME',
                                                       passwordVariable: 'DOCKER_PASSWORD')]) {
-                        bat "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+                        sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
                     }
                 }
             }
@@ -37,7 +36,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    bat "docker push ${DOCKER_IMAGE}"
+                    sh "docker push ${DOCKER_IMAGE}"
                 }
             }
         }
@@ -45,7 +44,7 @@ pipeline {
         stage('Clean Up') {
             steps {
                 script {
-                    bat "docker rmi ${DOCKER_IMAGE}"
+                    sh "docker rmi ${DOCKER_IMAGE}"
                 }
             }
         }
