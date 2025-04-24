@@ -19,8 +19,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build the Docker image using the Dockerfile
-                    bat 'docker build -t %DOCKER_IMAGE% .'
+                    // Build the Docker image using the Dockerfile (Windows batch script syntax)
+                    bat "docker build -t ${DOCKER_IMAGE} ."
                 }
             }
         }
@@ -32,7 +32,7 @@ pipeline {
                                                    usernameVariable: 'DOCKER_USERNAME', 
                                                    passwordVariable: 'DOCKER_PASSWORD')]) {
                     // Docker login command using the credentials
-                    bat 'docker login -u %DOCKER_USERNAME% -p %DOCKER_PASSWORD%'
+                    bat "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
                 }
             }
         }
@@ -41,7 +41,7 @@ pipeline {
             steps {
                 script {
                     // Push the built image to Docker Hub
-                    bat 'docker push %DOCKER_IMAGE%'
+                    bat "docker push ${DOCKER_IMAGE}"
                 }
             }
         }
@@ -49,7 +49,7 @@ pipeline {
         stage('Clean Up') {
             steps {
                 // Clean up Docker images to avoid excess storage usage
-                bat 'docker rmi %DOCKER_IMAGE%'
+                bat "docker rmi ${DOCKER_IMAGE}"
             }
         }
     }
