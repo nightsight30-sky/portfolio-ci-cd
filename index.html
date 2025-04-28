@@ -22,78 +22,76 @@
             </nav>
         </div>
     </header>
-        <!-- Introduction Section -->
-        <section class="intro" data-aos="fade-up" id="intro">
-            <p>I'm an aspiring Software Engineer and Data Scientist with a passion for solving complex problems.</p>
-        </section>
-        
-        <section class="hero"  id="hero">
+       <!-- Introduction Section -->
+<section class="intro" data-aos="fade-up" id="intro">
+    <p>I'm an aspiring Software Engineer and Data Scientist with a passion for solving complex problems.</p>
+</section>
 
-            <div class="video-container"></div>
-            <div class="video-indicators"></div>
-        </section>
+<section class="hero" id="hero">
+    <div class="image-container"></div>
+    <div class="image-indicators"></div>
+</section>
 
-        <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
-        <script>
-            AOS.init();
-        
-            const videos = [
-               'resource/1st.mp4',
-               'resource/2nd.mp4',
-               'resource/3rd.mp4',
-               'resource/4th.mp4',
-               'resource/5th.mp4'
-            ];
-        
-            let currentVideoIndex = 0;
-            let videoTimer;
-        
-            function changeVideo(index) {
-                currentVideoIndex = index;
-        
-                const videoContainer = document.querySelector('.video-container');
-                videoContainer.innerHTML = `
-                    <video width="100%" height="100%" autoplay muted>
-                        <source src="${videos[currentVideoIndex]}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>`;
-        
-                updateIndicators();
-        
-                clearTimeout(videoTimer);
-                videoTimer = setTimeout(() => {
-                    currentVideoIndex = (currentVideoIndex + 1) % videos.length;
-                    changeVideo(currentVideoIndex);
-                }, 5000);
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script>
+    AOS.init();
+
+    const images = [
+        'resource/1st.jpg',
+        'resource/2nd.jpg',
+        'resource/3rd.jpg',
+        'resource/4th.jpg',
+        'resource/5th.jpg'
+    ];
+
+    let currentImageIndex = 0;
+    let imageTimer;
+
+    function changeImage(index) {
+        currentImageIndex = index;
+
+        const imageContainer = document.querySelector('.image-container');
+        imageContainer.innerHTML = `
+            <img src="${images[currentImageIndex]}" alt="Slide Image" style="width: 100%; height: 100%; object-fit: cover;">
+        `;
+
+        updateIndicators();
+
+        clearTimeout(imageTimer);
+        imageTimer = setTimeout(() => {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            changeImage(currentImageIndex);
+        }, 5000);
+    }
+
+    function createIndicators() {
+        const indicatorContainer = document.querySelector('.image-indicators');
+        images.forEach((image, index) => {
+            const indicator = document.createElement('div');
+            indicator.classList.add('indicator');
+            if (index === 0) indicator.classList.add('active');
+            indicator.addEventListener('click', () => changeImage(index));
+            indicatorContainer.appendChild(indicator);
+        });
+    }
+
+    function updateIndicators() {
+        const indicators = document.querySelectorAll('.indicator');
+        indicators.forEach((indicator, index) => {
+            if (index === currentImageIndex) {
+                indicator.classList.add('active');
+            } else {
+                indicator.classList.remove('active');
             }
-        
-            function createIndicators() {
-                const indicatorContainer = document.querySelector('.video-indicators');
-                videos.forEach((video, index) => {
-                    const indicator = document.createElement('div');
-                    indicator.classList.add('indicator');
-                    if (index === 0) indicator.classList.add('active');
-                    indicator.addEventListener('click', () => changeVideo(index));
-                    indicatorContainer.appendChild(indicator);
-                });
-            }
-        
-            function updateIndicators() {
-                const indicators = document.querySelectorAll('.indicator');
-                indicators.forEach((indicator, index) => {
-                    if (index === currentVideoIndex) {
-                        indicator.classList.add('active');
-                    } else {
-                        indicator.classList.remove('active');
-                    }
-                });
-            }
-        
-            window.onload = () => {
-                createIndicators();
-                changeVideo(0);
-            };
-        </script>
+        });
+    }
+
+    window.onload = () => {
+        createIndicators();
+        changeImage(0);
+    };
+</script>
+
        <!-- About Section -->
 <section class="about" data-aos="fade-up" id="about">
     <!--resume-->
